@@ -4,8 +4,7 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+Essentially a user should be allowed to be logged in for the app, so it has all the user information like pets, schedule etc..The user should also be allowed to add a pet and their information. User's are also allowed to add schedule and customize them.
 
 **b. Design changes**
 

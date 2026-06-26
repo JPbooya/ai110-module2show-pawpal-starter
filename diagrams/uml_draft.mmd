@@ -1,0 +1,65 @@
+classDiagram
+    class Owner {
+        +str name
+        +str email
+        +int phone
+        +dict preferences
+        +list pets
+        +add_pet(pet) None
+        +remove_pet(name) None
+        +get_pets() list
+        +set_preferences(prefs) None
+    }
+
+    class Pet {
+        +str name
+        +str species
+        +str breed
+        +int age
+        +float weight
+        +str health_notes
+        +get_info() str
+    }
+
+    class Task {
+        +str title
+        +int duration_minutes
+        +str priority
+        +str category
+        +bool is_recurring
+        +get_priority_score() int
+        +get_details() str
+    }
+
+    class Scheduler {
+        +int available_minutes
+        +list tasks
+        +generate_plan(tasks, available_minutes) DailyPlan
+        +sort_by_priority(tasks) list
+        +filter_by_time(tasks, minutes) list
+    }
+
+    class DailyPlan {
+        +str date
+        +Owner owner
+        +Pet pet
+        +list scheduled_tasks
+        +add_task(task, start_time) None
+        +total_duration() int
+        +get_summary() str
+        +explain() str
+    }
+
+    class ScheduledTask {
+        +Task task
+        +str start_time
+        +str end_time
+        +get_time_block() str
+    }
+
+    Owner "1" --> "1..*" Pet : owns
+    Pet "1" --> "0..*" Task : has
+    Owner --> Scheduler : uses
+    Scheduler --> DailyPlan : generates
+    DailyPlan "1" --> "0..*" ScheduledTask : contains
+    ScheduledTask --> Task : wraps
