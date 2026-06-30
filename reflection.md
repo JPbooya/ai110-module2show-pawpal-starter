@@ -27,6 +27,12 @@ No major changes at all from the inital design, only a couple of tweaks for user
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
 
+My scheduler has two conflict-detection methods that trade accuracy for robustness. `find_conflicts()` is duration-aware: it parses each task's `time` into minutes and checks whether the actual time windows overlap, so it catches partial overlaps (e.g. a 30-minute walk at 08:00 colliding with a vet visit starting at 08:15). The cost is that parsing can throw an exception if a task has a malformed time string (like "noon" instead of "08:00"), which the app's free-text time field made easy to enter by accident.
+
+`check_for_conflicts()` instead groups tasks by their exact `time` string with no parsing at all, so it can never crash on bad input — but it only flags tasks that start at the literal same time, missing partial overlaps like 08:00–08:30 and 08:15–08:45.
+
+I used the lightweight version in the interactive app, since a typo in a time field is a near-certain occurrence for a real user, and missing a partial-overlap warning is a much smaller cost than crashing the whole scheduling page. The duration-aware version stays available for cases where input is already trusted/validated.
+
 ---
 
 ## 3. AI Collaboration

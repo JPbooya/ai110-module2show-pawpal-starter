@@ -71,14 +71,12 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
-
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.organize_by_time(day_of_week=None)` | Sorts tasks chronologically by their `time` attribute. Can be scoped to just a given weekday's due tasks; defaults to all tasks across all pets. |
+| Filtering | `Scheduler.filter_tasks(pet_name=None, status=None)` | Filters tasks by pet name and/or completion status (`"pending"` or `"completed"`). Both filters combine with AND when given together. |
+| Conflict detection | `Scheduler.find_conflicts(day_of_week=None)`, `Scheduler.check_for_conflicts(day_of_week=None)` | Two strategies, traded off for accuracy vs. robustness: `find_conflicts` does duration-aware overlap detection via `Task.overlaps()`/`start_minutes()`/`end_minutes()`, catching partial overlaps but raising on a malformed `time` string. `check_for_conflicts` is a lightweight version that groups tasks by exact start time only (no parsing, can't raise) and returns a ready-to-display warning string — used in `app.py` since it can't crash on bad user input. Both check tasks belonging to the same pet *or* different pets. |
+| Recurring tasks | `Task.next_occurrence()`, `Scheduler.complete_task(task)`, `Task.is_due_on(day_of_week)` | Completing a `daily`/`weekly` task through `Scheduler.complete_task()` marks the original as done and automatically appends a fresh pending instance (`Task.next_occurrence()`) to the same pet, so the original stays as a historical record. `Task.is_due_on()` determines whether a recurring task applies on a given weekday (`weekly` tasks only match their assigned `day_of_week`; `daily`/`once` are always due). |
 
 ## 📸 Demo Walkthrough
 
