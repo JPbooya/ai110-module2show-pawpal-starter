@@ -11,6 +11,8 @@ Essentially a user should be allowed to be logged in for the app, so it has all 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
 
+No major changes at all from the inital design, only a couple of tweaks for users values that I told the Ai to modify so that it make sense.
+
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
