@@ -57,16 +57,54 @@ Today's Schedule
 
 ```bash
 # Run the full test suite:
-pytest
+pytest tests/test_pawpal.py -v
 
 # Run with coverage:
 pytest --cov
 ```
 
+The test suite covers 24 cases across four areas:
+
+**Sorting** — tasks returned in chronological order, ties preserved, midnight/noon/late-night boundary values, and weekly tasks filtered out when not due.
+
+**Recurrence** — completing a daily or weekly task spawns a new pending instance; a one-off task does not recur; chained completions keep generating new occurrences; `duration_minutes` is preserved across recurrence.
+
+**Conflict detection** — overlapping windows flagged for same pet and across pets; back-to-back tasks (adjacent, not overlapping) are not flagged; three-way overlaps produce all three pairs; malformed time strings do not crash `check_for_conflicts`.
+
+**Filtering** — filter by pet name, status, or both combined; unknown pet name returns an empty list rather than raising.
+
 Sample test output:
 
 ```
-# Paste your pytest output here
+============================= test session starts ==============================
+collected 24 items
+
+tests/test_pawpal.py::test_mark_complete_changes_status PASSED
+tests/test_pawpal.py::test_adding_task_increases_pet_task_count PASSED
+tests/test_pawpal.py::test_organize_by_time_sorts_chronologically PASSED
+tests/test_pawpal.py::test_filter_tasks_by_pet_and_status PASSED
+tests/test_pawpal.py::test_weekly_task_is_only_due_on_its_day PASSED
+tests/test_pawpal.py::test_completing_daily_task_creates_next_occurrence PASSED
+tests/test_pawpal.py::test_completing_weekly_task_creates_next_occurrence_same_day PASSED
+tests/test_pawpal.py::test_completing_once_task_does_not_create_next_occurrence PASSED
+tests/test_pawpal.py::test_find_conflicts_detects_overlapping_times_for_same_pet PASSED
+tests/test_pawpal.py::test_find_conflicts_detects_overlapping_times_across_different_pets PASSED
+tests/test_pawpal.py::test_find_owning_pet_returns_correct_pet PASSED
+tests/test_pawpal.py::test_check_for_conflicts_warns_on_shared_start_time PASSED
+tests/test_pawpal.py::test_check_for_conflicts_returns_empty_string_when_no_conflicts PASSED
+tests/test_pawpal.py::test_check_for_conflicts_does_not_raise_on_malformed_time PASSED
+tests/test_pawpal.py::test_organize_by_time_keeps_all_tasks_with_identical_start_times PASSED
+tests/test_pawpal.py::test_organize_by_time_handles_midnight_and_late_night_tasks PASSED
+tests/test_pawpal.py::test_organize_by_time_excludes_weekly_tasks_not_due_today PASSED
+tests/test_pawpal.py::test_next_occurrence_preserves_duration_minutes PASSED
+tests/test_pawpal.py::test_completing_already_completed_task_adds_another_occurrence PASSED
+tests/test_pawpal.py::test_chained_completion_creates_further_occurrence PASSED
+tests/test_pawpal.py::test_filter_tasks_with_unknown_pet_name_returns_empty PASSED
+tests/test_pawpal.py::test_filter_tasks_combined_pet_and_status PASSED
+tests/test_pawpal.py::test_find_conflicts_does_not_flag_back_to_back_tasks PASSED
+tests/test_pawpal.py::test_find_conflicts_returns_all_pairs_for_three_overlapping_tasks PASSED
+
+============================== 24 passed in 0.02s ==============================
 ```
 
 ## 📐 Smarter Scheduling
